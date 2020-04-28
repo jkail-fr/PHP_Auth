@@ -3,7 +3,9 @@
 require_once("./SqlConnect.php");
 
 if (empty($_POST)) {
-    echo "Créer un compte";
+    header('Location:./create.html');
+    exit();
+} elseif (isset($_POST['create'])) {
 } else {
     echo "log in";
 }
