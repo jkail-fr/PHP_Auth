@@ -11,25 +11,21 @@ if (empty($_POST)) {
 // Si on a cliqué sur le bouton "Créer un compte"
 elseif (isset($_POST['create'])) {
 
-    // $email = $_POST['email'];
-    // $pseudo = $_POST['pseudo'];
+    $email = $_POST['email'];
+    $pseudo = $_POST['pseudo'];
 
     // Recherche du pseudo dans la BDD
-    $existingPseudo = $SQL->prepare("SELECT pseudo from users WHERE pseudo=:pseudo");
-    $existingPseudo->execute(array("pseudo" => $_POST['pseudo']));
-    $checkExistingPseudo = $existingPseudo->fetch(PDO::FETCH_OBJ);
-    // $checkExistingPseudo = dbCheck($pseudo);
+    $checkExistingPseudo = dbCheck('pseudo', $pseudo);
 
     // Vérification de l'existence du pseudo dans la BDD lors de la création de compte
-    if ($checkExistingPseudo == false) {
-
+    if ($checkExistingPseudo == true) {
+        echo "toto";
         // Recherche du mail dans la BDD
-        $existingEmail = $SQL->prepare("SELECT email from users WHERE email=:email");
-        $existingEmail->execute(array("email" => $_POST['email']));
-        $checkExistingEmail = $existingEmail->fetch(PDO::FETCH_OBJ);
+        $checkExistingEmail = dbCheck('email', $email);
 
         // Vérification de l'existence du mail dans la BDD lors de la création de compte
-        if ($checkExistingEmail == false) {
+        if ($checkExistingEmail == true) {
+            echo "tata";
             $hashPassword = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
             // On créé l'utilisateur
@@ -43,9 +39,11 @@ elseif (isset($_POST['create'])) {
             // Création des variables de session
             $_SESSION['pseudo'] = $_POST['pseudo'];
         } else {
+            echo "titi";
             echo "L'email ou  le pseudo existe déjà !";
         }
     } else {
+        echo "tyty";
         echo "L'email ou  le pseudo existe déjà !";
     }
 } else {
