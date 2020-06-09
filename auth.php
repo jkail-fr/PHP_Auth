@@ -17,15 +17,13 @@ elseif (isset($_POST['create'])) {
     $ExistingPseudo = $SQL->prepare("SELECT pseudo from users WHERE pseudo=:pseudo");
     $ExistingPseudo->execute(array('pseudo'=>$_POST['pseudo']));
     $checkExistingPseudo = $ExistingPseudo->fetch(PDO::FETCH_OBJ);*/
-    $checkExistingPseudo = dbCheck($pseudo);
-    var_dump($checkExistingPseudo);
-    if ($checkExistingPseudo == false)
+    $checkExistingPseudo = dbCheck('pseudo', $pseudo);
+    if ($checkExistingPseudo == true)
        {
-        $ExistingEmail = $SQL->prepare("SELECT email from users WHERE email=:email");
-        $ExistingEmail->execute(array('email'=>$_POST['email']));
-        $checkExistingEmail = $ExistingEmail->fetch(PDO::FETCH_OBJ);
-        if ($checkExistingEmail == false)
-        {
+           echo 'toto';
+        $checkExistingEmail = dbCheck('email', $email);
+        if ($checkExistingEmail == true)
+        { echo 'tata';
             $hashPassword=password_hash($_POST['password'], PASSWORD_BCRYPT);
             $createUser = $SQL->prepare("INSERT INTO users(pseudo, userPassword, email) VALUES (:pseudo, :userPassword, :email )");
             $createUser->execute(array(
@@ -35,6 +33,7 @@ elseif (isset($_POST['create'])) {
             ));
             $_SESSION['pseudo'] = $_POST['pseudo'];}
         else {
+            echo 'titi';
             echo "l'email ou le pseudo est existe déjà.";
         }
        }
