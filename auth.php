@@ -11,8 +11,8 @@ if (empty($_POST))
 } 
 elseif (isset($_POST['create'])) {
     // Vérification de l'existence du pseudo puis de l'email dans la BDD avant d'éxecuter le code de création
-    $email = $_POST['email'];
-    $pseudo = $_POST['pseudo'];
+    $email = htmlentities($_POST['email']);
+    $pseudo = htmlentities($_POST['pseudo']);
     
     $checkExistingPseudo = dbCheck('pseudo', $pseudo);
     
@@ -25,11 +25,13 @@ elseif (isset($_POST['create'])) {
             
             $createUser = $SQL->prepare("INSERT INTO users(pseudo, userPassword, email) VALUES (:pseudo, :userPassword, :email )");
             $createUser->execute(array(
-                'pseudo' => $_POST['pseudo'],
+                'pseudo' => $pseudo,
                 'userPassword' => $hashPassword,
-                'email' => $_POST['email']));
+                'email' => $email));
 
-            $_SESSION['pseudo'] = $_POST['pseudo'];
+            $_SESSION['pseudo'] = $pseudo;
+            $_SESSION['email'] = $email;
+            header('Location: ./index.php');
         }
         else {
             echo 'Le pseudo '. $_POST['email'].' existe déjà.';
@@ -41,9 +43,8 @@ elseif (isset($_POST['create'])) {
 }
 else 
 {
-    //$email = $_POST['email'];
-    $pseudo = $_POST['pseudo'];
-    $password = $_POST['password'];
+    $pseudo = htmlentities($_POST['pseudo']);
+    $password = htmlentities($_POST['password']);
     $checkExistingPseudo = dbCheck('pseudo', $pseudo);
     if ($checkExistingPseudo == true)
        {
@@ -53,7 +54,8 @@ else
         if (password_verify($password, $result[0]) == true )
         {
         $_SESSION['pseudo'] = $pseudo;
-        echo "Welcome asshole";
+        echo "Connecté";
+        header('Location: ./index.php');
         }
         else
         {
