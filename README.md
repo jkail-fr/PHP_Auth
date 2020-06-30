@@ -19,3 +19,5 @@ idee V2 : rajouter authentification LDAP : Oauth (gmail / facebook) et un mode e
 
 NExt time : Log in
 Log in : verif comparaison SQL
+
+aprers création compte, mettre un message

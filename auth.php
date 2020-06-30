@@ -18,12 +18,9 @@ elseif (isset($_POST['create'])) {
     
     if ($checkExistingPseudo == false)
        {
-
         $checkExistingEmail = dbCheck('email', $email);
-
         if ($checkExistingEmail == false)
         { 
-
             $hashPassword=password_hash($_POST['password'], PASSWORD_BCRYPT); // ou PASSWORD_ARGON2I ?
             
             $createUser = $SQL->prepare("INSERT INTO users(pseudo, userPassword, email) VALUES (:pseudo, :userPassword, :email )");
@@ -44,5 +41,23 @@ elseif (isset($_POST['create'])) {
 }
 else 
 {
-    echo "log in";
+    //$email = $_POST['email'];
+    $pseudo = $_POST['pseudo'];
+    $password = $_POST['password'];
+    $checkExistingPseudo = dbCheck('pseudo', $pseudo);
+    if ($checkExistingPseudo == true)
+       {
+        $storedPswd = $SQL->prepare("SELECT userPassword FROM users WHERE pseudo = :pseudo");
+        $storedPswd->execute(array('pseudo' => $pseudo));
+        $result = $storedPswd->fetch();
+        if (password_verify($password, $result[0]) == true )
+        {
+        $_SESSION['pseudo'] = $pseudo;
+        echo "Welcome asshole";
+        }
+        else
+        {
+         echo "Erreur de mot de passe";
+        }
+       }
 }
